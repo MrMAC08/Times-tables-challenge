@@ -366,7 +366,7 @@
             <div class="question-section">
                 <div class="timer" id="timer">8</div>
                 <div class="question" id="questionDisplay">7 × 8 = ?</div>
-                <input type="number" class="answer-input" id="answerInput" placeholder="?">
+                <input type="number" class="answer-input" id="answerInput" placeholder="?" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                 <br>
                 <button class="btn btn-success" onclick="submitAnswer()" id="submitButton">Submit</button>
             </div>
@@ -628,26 +628,6 @@
                     userAnswer: isTimeout ? 'No answer (timeout)' : (userAnswer || 'No answer'),
                     isTimeout: isTimeout
                 });
-                
-                // Show immediate feedback
-                const feedback = isTimeout ? 
-                    `⏰ Time's up! ${currentQuestion.question} = ${correctAnswer}` :
-                    `❌ Wrong! ${currentQuestion.question} = ${correctAnswer} (You answered: ${userAnswer || 'blank'})`;
-                
-                // Create temporary feedback popup
-                const feedbackDiv = document.createElement('div');
-                feedbackDiv.style.cssText = `
-                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    background: #fed7d7; color: #c53030; padding: 20px; border-radius: 10px;
-                    font-size: 1.2rem; font-weight: bold; z-index: 1000; text-align: center;
-                    border: 3px solid #e53e3e; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-                `;
-                feedbackDiv.textContent = feedback;
-                document.body.appendChild(feedbackDiv);
-                
-                setTimeout(() => {
-                    document.body.removeChild(feedbackDiv);
-                }, 2000);
             }
             
             gameState.currentQuestionIndex++;
@@ -655,7 +635,7 @@
             setTimeout(() => {
                 document.getElementById('answerInput').style.borderColor = '#fed7d7';
                 showNextQuestion();
-            }, 2000);
+            }, 800);
         }
 
         function endChallenge() {
@@ -812,5 +792,5 @@ ${isNewRecord ? '🎉 NEW PERSONAL RECORD! 🎉' : ''}`;
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9748abfce3c3d993',t:'MTc1NjA5OTU1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97499706b58ad992',t:'MTc1NjEwOTE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
