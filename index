@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Times Tables Challenge - Beat Your Record!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            color: #4a5568;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #718096;
+            margin-bottom: 20px;
+        }
+        
+        .setup-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .setup-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .input-group label {
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        input, select {
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .times-tables {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .table-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+        }
+        
+        .table-checkbox:hover {
+            border-color: #4299e1;
+        }
+        
+        .table-checkbox input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+        
+        .game-section {
+            display: none;
+        }
+        
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stat-box {
+            background: #e6fffa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #38b2ac;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c7a7b;
+        }
+        
+        .stat-label {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+        
+        .question-section {
+            text-align: center;
+            background: #fff5f5;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .question {
+            font-size: 4rem;
+            color: #c53030;
+            margin-bottom: 20px;
+        }
+        
+        .timer {
+            font-size: 2rem;
+            color: #ed8936;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .timer.warning {
+            color: #e53e3e;
+            animation: pulse 0.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .answer-input {
+            font-size: 2.5rem;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            border: 3px solid #fed7d7;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .results-section {
+            display: none;
+            text-align: center;
+            background: #f0fff4;
+            padding: 30px;
+            border-radius: 15px;
+            border: 3px solid #48bb78;
+        }
+        
+        .results-title {
+            font-size: 2.5rem;
+            color: #2f855a;
+            margin-bottom: 20px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #68d391;
+        }
+        
+        .result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2f855a;
+        }
+        
+        .result-label {
+            color: #4a5568;
+            margin-top: 5px;
+        }
+        
+        .share-section {
+            background: #e6fffa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .share-text {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #38b2ac;
+            font-family: monospace;
+            font-size: 14px;
+            margin: 10px 0;
+            white-space: pre-line;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .record-badge {
+            background: #ffd700;
+            color: #744210;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🏆 Times Tables Challenge 🏆</h1>
+            <p class="subtitle">Test yourself with 20 questions and beat your record!</p>
+        </div>
+        
+        <!-- Setup Section -->
+        <div class="setup-section" id="setupSection">
+            <h2 style="margin-bottom: 20px; color: #2d3748;">Challenge Setup</h2>
+            
+            <div class="setup-row">
+                <div class="input-group">
+                    <label for="playerName">Your Name:</label>
+                    <input type="text" id="playerName" placeholder="Enter your name" value="Student">
+                </div>
+                
+                <div class="input-group">
+                    <label for="gameType">Question Type:</label>
+                    <select id="gameType">
+                        <option value="multiplication">Multiplication (×)</option>
+                        <option value="division">Division (÷)</option>
+                        <option value="mixed">Mixed (× and ÷)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="setup-row">
+                <div class="input-group">
+                    <label>Select Times Tables:</label>
+                    <div class="times-tables" id="timesTablesSelection">
+                        <!-- Generated dynamically -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-row">
+                <button class="btn btn-primary" onclick="startChallenge()">Start Challenge!</button>
+            </div>
+        </div>
+        
+        <!-- Game Section -->
+        <div class="game-section" id="gameSection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div class="game-stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="currentQuestion">1</div>
+                    <div class="stat-label">Question</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="correctCount">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="streakCount">0</div>
+                    <div class="stat-label">Streak</div>
+                </div>
+            </div>
+            
+            <div class="question-section">
+                <div class="timer" id="timer">8</div>
+                <div class="question" id="questionDisplay">7 × 8 = ?</div>
+                <input type="number" class="answer-input" id="answerInput" placeholder="?">
+                <br>
+                <button class="btn btn-success" onclick="submitAnswer()" id="submitButton">Submit</button>
+            </div>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="results-title">🎉 Challenge Complete! 🎉</div>
+            <div id="recordBadge"></div>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="result-value" id="finalScore">0</div>
+                    <div class="result-label">Correct Answers</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="finalPercentage">0%</div>
+                    <div class="result-label">Accuracy</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="bestStreak">0</div>
+                    <div class="result-label">Best Streak</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-value" id="avgTime">0s</div>
+                    <div class="result-label">Avg Time</div>
+                </div>
+            </div>
+            
+            <div id="wrongAnswersSection" class="share-section" style="display: none; background: #fff5f5; border: 2px solid #fed7d7;">
+                <h3 style="color: #c53030;">Questions You Got Wrong:</h3>
+                <div id="wrongAnswersList" style="text-align: left; margin: 15px 0;"></div>
+            </div>
+            
+            <div class="share-section">
+                <h3>Share Your Results:</h3>
+                <div class="share-text" id="shareText"></div>
+                <button class="btn btn-primary" onclick="copyResults()">📋 Copy to Clipboard</button>
+                <div id="copyMessage" style="color: #48bb78; margin-top: 10px; display: none;">✅ Copied to clipboard!</div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <button class="btn btn-warning" onclick="resetChallenge()">Try Again</button>
+                <button class="btn btn-primary" onclick="newChallenge()">New Challenge</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            playerName: '',
+            selectedTables: [],
+            gameType: 'multiplication',
+            questions: [],
+            currentQuestionIndex: 0,
+            correctAnswers: 0,
+            currentStreak: 0,
+            bestStreak: 0,
+            timeLeft: 8,
+            questionStartTime: 0,
+            responseTimes: [],
+            wrongAnswers: [],
+            timer: null,
+            records: JSON.parse(localStorage.getItem('timesTablesRecords') || '{}')
+        };
+
+        // Initialize times tables selection
+        function initializeTimesTablesSelection() {
+            const container = document.getElementById('timesTablesSelection');
+            for (let i = 1; i <= 12; i++) {
+                const checkbox = document.createElement('div');
+                checkbox.className = 'table-checkbox';
+                checkbox.innerHTML = `
+                    <input type="checkbox" id="table${i}" value="${i}" ${i <= 5 ? 'checked' : ''}>
+                    <label for="table${i}">${i}</label>
+                `;
+                container.appendChild(checkbox);
+                
+                checkbox.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'INPUT') {
+                        const input = checkbox.querySelector('input');
+                        input.checked = !input.checked;
+                    }
+                });
+            }
+        }
+
+        function generateQuestions() {
+            const questions = [];
+            const selectedTables = gameState.selectedTables;
+            
+            if (selectedTables.length === 1) {
+                // Single table - repeat trickier ones (6-12)
+                const table = selectedTables[0];
+                const easyQuestions = [];
+                const hardQuestions = [];
+                
+                for (let i = 1; i <= 12; i++) {
+                    const question = createQuestion(table, i);
+                    if (i <= 5) {
+                        easyQuestions.push(question);
+                    } else {
+                        hardQuestions.push(question);
+                        hardQuestions.push(question); // Add twice for repetition
+                    }
+                }
+                
+                questions.push(...easyQuestions, ...hardQuestions);
+                
+                // Shuffle and take 20
+                questions.sort(() => Math.random() - 0.5);
+                return questions.slice(0, 20);
+            } else {
+                // Multiple tables - no repeats
+                const allPossible = [];
+                
+                for (const table of selectedTables) {
+                    for (let i = 1; i <= 12; i++) {
+                        allPossible.push(createQuestion(table, i));
+                    }
+                }
+                
+                // Shuffle and take 20
+                allPossible.sort(() => Math.random() - 0.5);
+                return allPossible.slice(0, 20);
+            }
+        }
+
+        function createQuestion(table, multiplier) {
+            let questionText, answer;
+            
+            if (gameState.gameType === 'multiplication' || 
+                (gameState.gameType === 'mixed' && Math.random() < 0.5)) {
+                questionText = `${table} × ${multiplier}`;
+                answer = table * multiplier;
+            } else {
+                const product = table * multiplier;
+                questionText = `${product} ÷ ${table}`;
+                answer = multiplier;
+            }
+            
+            return { question: questionText, answer: answer };
+        }
+
+        function startChallenge() {
+            const playerName = document.getElementById('playerName').value.trim() || 'Student';
+            const gameType = document.getElementById('gameType').value;
+            
+            // Get selected tables
+            const selectedTables = [];
+            for (let i = 1; i <= 12; i++) {
+                if (document.getElementById(`table${i}`).checked) {
+                    selectedTables.push(i);
+                }
+            }
+            
+            if (selectedTables.length === 0) {
+                alert('Please select at least one times table!');
+                return;
+            }
+            
+            // Initialize game state
+            gameState.playerName = playerName;
+            gameState.selectedTables = selectedTables;
+            gameState.gameType = gameType;
+            gameState.questions = generateQuestions();
+            gameState.currentQuestionIndex = 0;
+            gameState.correctAnswers = 0;
+            gameState.currentStreak = 0;
+            gameState.bestStreak = 0;
+            gameState.responseTimes = [];
+            
+            // Show game section
+            document.getElementById('setupSection').style.display = 'none';
+            document.getElementById('gameSection').style.display = 'block';
+            
+            showNextQuestion();
+        }
+
+        function showNextQuestion() {
+            if (gameState.currentQuestionIndex >= 20) {
+                endChallenge();
+                return;
+            }
+            
+            const question = gameState.questions[gameState.currentQuestionIndex];
+            document.getElementById('questionDisplay').textContent = question.question + ' = ?';
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+            
+            // Update progress
+            const progress = ((gameState.currentQuestionIndex) / 20) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update stats
+            document.getElementById('currentQuestion').textContent = gameState.currentQuestionIndex + 1;
+            document.getElementById('correctCount').textContent = gameState.correctAnswers;
+            document.getElementById('streakCount').textContent = gameState.currentStreak;
+            
+            // Start timer
+            gameState.timeLeft = 8;
+            gameState.questionStartTime = Date.now();
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(gameState.timer);
+            updateTimerDisplay();
+            
+            gameState.timer = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timer);
+                    submitAnswer(true); // Auto-submit as timeout
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = gameState.timeLeft;
+            
+            if (gameState.timeLeft <= 3) {
+                timerElement.classList.add('warning');
+            } else {
+                timerElement.classList.remove('warning');
+            }
+        }
+
+        function submitAnswer(isTimeout = false) {
+            clearInterval(gameState.timer);
+            
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+            const correctAnswer = gameState.questions[gameState.currentQuestionIndex].answer;
+            const responseTime = (Date.now() - gameState.questionStartTime) / 1000;
+            const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
+            
+            if (!isTimeout) {
+                gameState.responseTimes.push(responseTime);
+            } else {
+                gameState.responseTimes.push(8); // Max time for timeout
+            }
+            
+            if (userAnswer === correctAnswer && !isTimeout) {
+                gameState.correctAnswers++;
+                gameState.currentStreak++;
+                gameState.bestStreak = Math.max(gameState.bestStreak, gameState.currentStreak);
+                document.getElementById('answerInput').style.borderColor = '#48bb78';
+            } else {
+                gameState.currentStreak = 0;
+                document.getElementById('answerInput').style.borderColor = '#e53e3e';
+                
+                // Record wrong answer
+                gameState.wrongAnswers.push({
+                    question: currentQuestion.question,
+                    correctAnswer: correctAnswer,
+                    userAnswer: isTimeout ? 'No answer (timeout)' : (userAnswer || 'No answer'),
+                    isTimeout: isTimeout
+                });
+                
+                // Show immediate feedback
+                const feedback = isTimeout ? 
+                    `⏰ Time's up! ${currentQuestion.question} = ${correctAnswer}` :
+                    `❌ Wrong! ${currentQuestion.question} = ${correctAnswer} (You answered: ${userAnswer || 'blank'})`;
+                
+                // Create temporary feedback popup
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.style.cssText = `
+                    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                    background: #fed7d7; color: #c53030; padding: 20px; border-radius: 10px;
+                    font-size: 1.2rem; font-weight: bold; z-index: 1000; text-align: center;
+                    border: 3px solid #e53e3e; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+                `;
+                feedbackDiv.textContent = feedback;
+                document.body.appendChild(feedbackDiv);
+                
+                setTimeout(() => {
+                    document.body.removeChild(feedbackDiv);
+                }, 2000);
+            }
+            
+            gameState.currentQuestionIndex++;
+            
+            setTimeout(() => {
+                document.getElementById('answerInput').style.borderColor = '#fed7d7';
+                showNextQuestion();
+            }, 2000);
+        }
+
+        function endChallenge() {
+            clearInterval(gameState.timer);
+            
+            // Calculate results
+            const percentage = Math.round((gameState.correctAnswers / 20) * 100);
+            const avgTime = gameState.responseTimes.length > 0 ? 
+                (gameState.responseTimes.reduce((a, b) => a + b, 0) / gameState.responseTimes.length).toFixed(1) : 0;
+            
+            // Check for new record
+            const recordKey = `${gameState.gameType}_${gameState.selectedTables.sort().join('_')}`;
+            const currentRecord = gameState.records[recordKey] || 0;
+            const isNewRecord = gameState.correctAnswers > currentRecord;
+            
+            if (isNewRecord) {
+                gameState.records[recordKey] = gameState.correctAnswers;
+                localStorage.setItem('timesTablesRecords', JSON.stringify(gameState.records));
+            }
+            
+            // Show results
+            document.getElementById('gameSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            document.getElementById('finalScore').textContent = gameState.correctAnswers + '/20';
+            document.getElementById('finalPercentage').textContent = percentage + '%';
+            document.getElementById('bestStreak').textContent = gameState.bestStreak;
+            document.getElementById('avgTime').textContent = avgTime + 's';
+            
+            // Show record badge
+            const recordBadge = document.getElementById('recordBadge');
+            if (isNewRecord) {
+                recordBadge.innerHTML = '<div class="record-badge">🏆 NEW RECORD! 🏆</div>';
+            } else if (currentRecord > 0) {
+                recordBadge.innerHTML = `<div style="color: #718096;">Previous best: ${currentRecord}/20</div>`;
+            }
+            
+            // Show wrong answers if any
+            const wrongAnswersSection = document.getElementById('wrongAnswersSection');
+            const wrongAnswersList = document.getElementById('wrongAnswersList');
+            
+            if (gameState.wrongAnswers.length > 0) {
+                wrongAnswersSection.style.display = 'block';
+                wrongAnswersList.innerHTML = gameState.wrongAnswers.map((wrong, index) => 
+                    `<div style="background: white; padding: 10px; margin: 5px 0; border-radius: 5px; border-left: 4px solid #e53e3e;">
+                        <strong>${wrong.question} = ${wrong.correctAnswer}</strong><br>
+                        <span style="color: #718096;">Your answer: ${wrong.userAnswer}</span>
+                    </div>`
+                ).join('');
+            } else {
+                wrongAnswersSection.style.display = 'none';
+            }
+            
+            // Generate share text
+            const tablesText = gameState.selectedTables.length === 1 ? 
+                `${gameState.selectedTables[0]} times table` : 
+                `${gameState.selectedTables.length} times tables`;
+            
+            let shareText = `🏆 Times Tables Challenge Results 🏆
+Name: ${gameState.playerName}
+Challenge: ${tablesText} (${gameState.gameType})
+Score: ${gameState.correctAnswers}/20 (${percentage}%)
+Best Streak: ${gameState.bestStreak}
+Average Time: ${avgTime}s
+${isNewRecord ? '🎉 NEW PERSONAL RECORD! 🎉' : ''}`;
+
+            if (gameState.wrongAnswers.length > 0) {
+                shareText += `\n\nQuestions to practice:`;
+                gameState.wrongAnswers.forEach(wrong => {
+                    shareText += `\n• ${wrong.question} = ${wrong.correctAnswer}`;
+                });
+            }
+
+            shareText += `\n\nDate: ${new Date().toLocaleDateString()}`;
+            
+            document.getElementById('shareText').textContent = shareText;
+        }
+
+        function copyResults() {
+            const shareText = document.getElementById('shareText').textContent;
+            
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showCopyMessage();
+                }).catch(() => {
+                    // Fallback to older method
+                    fallbackCopyToClipboard(shareText);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyToClipboard(shareText);
+            }
+        }
+        
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopyMessage();
+            } catch (err) {
+                alert('Copy failed. Please manually select and copy the text above.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        function showCopyMessage() {
+            const message = document.getElementById('copyMessage');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
+
+        function resetChallenge() {
+            // Reset with same settings
+            document.getElementById('resultsSection').style.display = 'none';
+            
+            // Clear previous game state
+            gameState.currentQuestionIndex = 0;
+            gameState.correctAnswers = 0;
+            gameState.currentStreak = 0;
+            gameState.bestStreak = 0;
+            gameState.responseTimes = [];
+            gameState.wrongAnswers = [];
+            clearInterval(gameState.timer);
+            
+            startChallenge();
+        }
+
+        function newChallenge() {
+            // Go back to setup
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('setupSection').style.display = 'block';
+        }
+
+        // Allow Enter key to submit answer
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTimesTablesSelection();
+            
+            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    submitAnswer();
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9748abfce3c3d993',t:'MTc1NjA5OTU1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
