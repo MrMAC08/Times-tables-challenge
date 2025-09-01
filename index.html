@@ -456,36 +456,53 @@
 
         function generateQuestions() {
             const questions = [];
-            const selectedTables = gameState.selectedTables;
+            const selectedTables = gameState.selectedTables.filter(table => table !== 1); // Remove 1× table
+            
+            if (selectedTables.length === 0) {
+                // If only 1× was selected, default to 2-5 tables
+                selectedTables.push(2, 3, 4, 5);
+            }
             
             if (selectedTables.length === 1) {
-                // Single table - repeat trickier ones (6-12)
+                // Single table - focus on harder multipliers (3-12)
                 const table = selectedTables[0];
-                const easyQuestions = [];
+                const mediumQuestions = [];
                 const hardQuestions = [];
                 
-                for (let i = 1; i <= 12; i++) {
+                for (let i = 2; i <= 12; i++) { // Skip 1× (too easy)
                     const question = createQuestion(table, i);
                     if (i <= 5) {
-                        easyQuestions.push(question);
+                        mediumQuestions.push(question);
                     } else {
                         hardQuestions.push(question);
-                        hardQuestions.push(question); // Add twice for repetition
+                        hardQuestions.push(question); // Add twice for more practice
+                        if (i >= 8) {
+                            hardQuestions.push(question); // Add three times for 8-12 (hardest)
+                        }
                     }
                 }
                 
-                questions.push(...easyQuestions, ...hardQuestions);
+                questions.push(...mediumQuestions, ...hardQuestions);
                 
                 // Shuffle and take 20
                 questions.sort(() => Math.random() - 0.5);
                 return questions.slice(0, 20);
             } else {
-                // Multiple tables - no repeats
+                // Multiple tables - create balanced mix
                 const allPossible = [];
                 
                 for (const table of selectedTables) {
-                    for (let i = 1; i <= 12; i++) {
-                        allPossible.push(createQuestion(table, i));
+                    for (let i = 2; i <= 12; i++) { // Skip 1× multiplier
+                        const question = createQuestion(table, i);
+                        allPossible.push(question);
+                        
+                        // Add extra copies of harder questions for better practice
+                        if (i >= 6 && i <= 9) {
+                            allPossible.push(question); // Double up on 6-9 (tricky range)
+                        }
+                        if (i >= 7 && i <= 8) {
+                            allPossible.push(question); // Triple up on 7-8 (hardest)
+                        }
                     }
                 }
                 
@@ -792,5 +809,5 @@ ${isNewRecord ? '🎉 NEW PERSONAL RECORD! 🎉' : ''}`;
             });
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97499706b58ad992',t:'MTc1NjEwOTE4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'978259df875bd9b0',t:'MTc1NjcwNDM2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
